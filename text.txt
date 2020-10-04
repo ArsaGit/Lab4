@@ -1,0 +1,6 @@
+Hello World!
+Second stroka.
+	Third stroka,fourth word;
+Fourth sentence:
+Fifth strok'a?
+(Sixth stroka)
