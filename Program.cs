@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 
 namespace Lab4
 {
@@ -14,16 +15,9 @@ namespace Lab4
 
             Console.WriteLine(text);
 
-            List<List<string>> listOfListsOfWords = new List<List<string>>(GetListOfListsOfWords(text));
-
-            foreach(List<string> listOfWords in listOfListsOfWords)
-            {
-                foreach(string word in listOfWords)
-                {
-                    Console.WriteLine(word);
-                }
-            }
-
+            var listOfListsOfWords = new List<List<string>>(GetListOfListsOfWords(text));
+            ShowListListString(listOfListsOfWords);
+            
 
         }
         //чтение с клавиатуры
@@ -75,20 +69,24 @@ namespace Lab4
             }
             return listOfSentences;
         }
-
         //выделяет лист слов из предложения
         static List<string> GetListOfWords(string sentence)
         {
-            List<string> listOfWords = new List<string>();
-            for(int i=0;i<sentence.Length;i++)
+            var listOfWords = new List<string>();
+            int i = 0;
+            while (i < sentence.Length)
             {
-                string word = null;
-                while(char.IsLetterOrDigit(sentence[i])||sentence[i]=='\'')
+                StringBuilder word = new StringBuilder(null);
+                //int j = i;
+                while (i < sentence.Length && (char.IsLetterOrDigit(sentence[i]) || sentence[i].Equals('\'')))
                 {
-                    word += sentence[i];
+                    word.Append(sentence[i]);
                     i++;
                 }
-                if(!IsThereDigits(word))listOfWords.Add(word);
+                string wordStr = word.ToString();
+                wordStr = wordStr.ToLower();
+                if (!IsThereDigits(wordStr)) listOfWords.Add(wordStr);
+                i++;
             }
             return listOfWords;
         }
@@ -100,6 +98,17 @@ namespace Lab4
                 if (char.IsDigit(ch)) return true;
             }
             return false;
+        }
+        //вывод списка списков слов
+        static void ShowListListString(List<List<string>> listListString)
+        {
+            foreach (List<string> listString in listListString)
+            {
+                foreach (string word in listString)
+                {
+                    Console.WriteLine(word);
+                }
+            }
         }
     }
 }
