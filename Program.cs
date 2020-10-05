@@ -54,6 +54,8 @@ namespace Lab4
             {
                 listOfListsOfWords.Add(GetListOfWords(sentence));
             }
+            
+
             return listOfListsOfWords;
         }
         //выделяет лист предложений из текста
@@ -65,7 +67,7 @@ namespace Lab4
             {
                 string s = senstence;
                 s = s.Trim();
-                listOfSentences.Add(s);
+                if(!s.Equals(""))listOfSentences.Add(s);
             }
             return listOfSentences;
         }
@@ -85,7 +87,7 @@ namespace Lab4
                 }
                 string wordStr = word.ToString();
                 wordStr = wordStr.ToLower();
-                if (!IsThereDigits(wordStr)) listOfWords.Add(wordStr);
+                if (!IsThereDigits(wordStr)&&!wordStr.Equals("")) listOfWords.Add(wordStr);
                 i++;
             }
             return listOfWords;
