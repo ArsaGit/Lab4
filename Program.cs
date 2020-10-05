@@ -12,23 +12,18 @@ namespace Lab4
             //text = ReadText();
             text = ReadTextFromFile();
 
-            List<List<string>> listOfListsOfWords = new List<List<string>>();
-
             Console.WriteLine(text);
-            
 
-            List<string> sentence = new List<string>();
-            string[] arr_s = text.Split(new char[] {'.', '!','?',';',':','(',')'});
-            foreach(string s in arr_s)
+            List<List<string>> listOfListsOfWords = new List<List<string>>(GetListOfListsOfWords(text));
+
+            foreach(List<string> listOfWords in listOfListsOfWords)
             {
-                sentence.Add(s);
+                foreach(string word in listOfWords)
+                {
+                    Console.WriteLine(word);
+                }
             }
 
-            Console.WriteLine("\nLIST:");
-            foreach(string s in sentence)
-            {
-                Console.Write(s);
-            }
 
         }
         //чтение с клавиатуры
@@ -56,29 +51,55 @@ namespace Lab4
                 return textFromFile;
             }
         }
-
+        //возвращает лист листов слов
         static List<List<string>> GetListOfListsOfWords(string text)
         {
             List<List<string>> listOfListsOfWords = new List<List<string>>();
             List<string> listOfSentences = new List<string>(GetListOfSentences(text));
             foreach (string sentence in listOfSentences)
             {
-                string word;
-
+                listOfListsOfWords.Add(GetListOfWords(sentence));
             }
-
             return listOfListsOfWords;
         }
-
+        //выделяет лист предложений из текста
         static List<string> GetListOfSentences(string text)
         {
             List<string> listOfSentences = new List<string>();
             string[] arrayStr = text.Split(new char[] { '.', '!', '?', ';', ':', '(', ')' },StringSplitOptions.RemoveEmptyEntries);
             foreach (string senstence in arrayStr)
             {
-                listOfSentences.Add(senstence);
+                string s = senstence;
+                s = s.Trim();
+                listOfSentences.Add(s);
             }
             return listOfSentences;
+        }
+
+        //выделяет лист слов из предложения
+        static List<string> GetListOfWords(string sentence)
+        {
+            List<string> listOfWords = new List<string>();
+            for(int i=0;i<sentence.Length;i++)
+            {
+                string word = null;
+                while(char.IsLetterOrDigit(sentence[i])||sentence[i]=='\'')
+                {
+                    word += sentence[i];
+                    i++;
+                }
+                if(!IsThereDigits(word))listOfWords.Add(word);
+            }
+            return listOfWords;
+        }
+        //есть ли в словах цифры
+        static bool IsThereDigits(string word)
+        {
+            foreach(char ch in word)
+            {
+                if (char.IsDigit(ch)) return true;
+            }
+            return false;
         }
     }
 }
