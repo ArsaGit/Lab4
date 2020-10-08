@@ -9,9 +9,10 @@ namespace Lab4
     {
         static void Main(string[] args)
         {
+            //Console.OutputEncoding = Encoding.UTF8
             string text = null;
-            text = ReadText();
-            //text = ReadTextFromFile();
+            //text = ReadText();
+            text = ReadTextFromFile();
 
             List<string> listOfSentences =new List<string>(GetListOfSentences(text));
             List<string> listOfUniqueWords = new List<string>(GetListOfUniqueWords(text));
@@ -91,7 +92,8 @@ namespace Lab4
                     i++;
                 }
                 string wordStr = word.ToString();
-                if(wordStr!="")listOfUniqueWords.Add(wordStr);
+                
+                if(wordStr!=""&&IsWordUnique(wordStr,listOfUniqueWords))listOfUniqueWords.Add(wordStr);
                 i++;
             }
             return listOfUniqueWords;
@@ -99,8 +101,11 @@ namespace Lab4
         //проверка на уникальность
         static bool IsWordUnique(string word,List<string> listOfUniqueWords)
         {
-            bool isWordUnique = false;
-            foreach (string w in listOfUniqueWords)if (listOfUniqueWords.Contains(word))isWordUnique = true;
+            bool isWordUnique = true;
+            foreach (string w in listOfUniqueWords)
+            {
+                if (listOfUniqueWords.Contains(word)) isWordUnique = false;
+            }
             return isWordUnique;
         }
         //вывод самого длинного слова и 5 пункт
