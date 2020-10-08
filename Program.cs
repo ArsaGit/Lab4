@@ -10,15 +10,18 @@ namespace Lab4
         static void Main(string[] args)
         {
             string text = null;
-            //text = ReadText();
-            text = ReadTextFromFile();
+            text = ReadText();
+            //text = ReadTextFromFile();
 
-            Console.WriteLine(text);
+            List<string> listOfSentences =new List<string>(GetListOfSentences(text));
+            List<string> listOfUniqueWords = new List<string>(GetListOfUniqueWords(text));
+            ShowNumberOfPunctuatioinMarks(text);
 
-            var listOfListsOfWords = new List<List<string>>(GetListOfListsOfWords(text));
-            ShowListListString(listOfListsOfWords);
-            
+            ShowList(listOfSentences);
 
+            ShowListOfUniqueWords(listOfUniqueWords);
+
+            ShowLongestWord(listOfUniqueWords);
         }
         //чтение с клавиатуры
         static string ReadText()
@@ -46,71 +49,95 @@ namespace Lab4
             }
         }
         //возвращает лист листов слов
-        static List<List<string>> GetListOfListsOfWords(string text)
+        static void ShowNumberOfPunctuatioinMarks(string text)
         {
-            List<List<string>> listOfListsOfWords = new List<List<string>>();
-            List<string> listOfSentences = new List<string>(GetListOfSentences(text));
-            foreach (string sentence in listOfSentences)
+            int n = 0;
+            foreach(char ch in text)
             {
-                listOfListsOfWords.Add(GetListOfWords(sentence));
+                if (ch == '.' || ch == '?' || ch == '!' || ch == ':' || ch == ';' || 
+                    ch == ',' || ch == '-' || ch == '(' || ch == ')' || ch == '\"') n++;
             }
-            
-
-            return listOfListsOfWords;
+            for(int i=0;i<text.Length-2;i++)
+            {
+                if ((text[i] == '.' && text[i + 1] == '.' && text[i + 2] == '.')) n++;
+            }
+            Console.WriteLine($"Количество знаков препинания:{n}");
         }
         //выделяет лист предложений из текста
         static List<string> GetListOfSentences(string text)
         {
             List<string> listOfSentences = new List<string>();
-            string[] arrayStr = text.Split(new char[] { '.', '!', '?', ';', ':', '(', ')' },StringSplitOptions.RemoveEmptyEntries);
+            string[] arrayStr = text.Split(new string[] { ".", "!", "?","..."},StringSplitOptions.RemoveEmptyEntries);
             foreach (string senstence in arrayStr)
             {
                 string s = senstence;
                 s = s.Trim();
-                if(!s.Equals(""))listOfSentences.Add(s);
+                if(!(s==""))listOfSentences.Add(s);
             }
             return listOfSentences;
         }
-        //выделяет лист слов из предложения
-        static List<string> GetListOfWords(string sentence)
+        //выделяет лист уникальных слов из текста
+        static List<string> GetListOfUniqueWords(string text)
         {
-            var listOfWords = new List<string>();
+            var listOfUniqueWords = new List<string>();
+            text = text.ToLower();
             int i = 0;
-            while (i < sentence.Length)
+            while (i < text.Length)
             {
                 StringBuilder word = new StringBuilder(null);
-                //int j = i;
-                while (i < sentence.Length && (char.IsLetterOrDigit(sentence[i]) || sentence[i].Equals('\'')))
+                while (i < text.Length && (char.IsLetter(text[i]) || text[i].Equals('\'')))
                 {
-                    word.Append(sentence[i]);
+                    word.Append(text[i]);
                     i++;
                 }
                 string wordStr = word.ToString();
-                wordStr = wordStr.ToLower();
-                if (!IsThereDigits(wordStr)&&!wordStr.Equals("")) listOfWords.Add(wordStr);
+                if(wordStr!="")listOfUniqueWords.Add(wordStr);
                 i++;
             }
-            return listOfWords;
+            return listOfUniqueWords;
         }
-        //есть ли в словах цифры
-        static bool IsThereDigits(string word)
+        //проверка на уникальность
+        static bool IsWordUnique(string word,List<string> listOfUniqueWords)
         {
-            foreach(char ch in word)
-            {
-                if (char.IsDigit(ch)) return true;
-            }
-            return false;
+            bool isWordUnique = false;
+            foreach (string w in listOfUniqueWords)if (listOfUniqueWords.Contains(word))isWordUnique = true;
+            return isWordUnique;
         }
-        //вывод списка списков слов
-        static void ShowListListString(List<List<string>> listListString)
+        //вывод самого длинного слова и 5 пункт
+        static void ShowLongestWord(List<string> list)
         {
-            foreach (List<string> listString in listListString)
+            string longestWord="";
+            foreach(string w in list)
             {
-                foreach (string word in listString)
-                {
-                    Console.WriteLine(word);
-                }
+                if (w.Length> longestWord.Length) longestWord = w;
             }
+            Console.WriteLine($"Самое длинное слово:{longestWord}");
+            if (longestWord.Length % 2 == 0) Console.WriteLine(longestWord.Substring(longestWord.Length / 2));
+            else
+            {
+                string str = longestWord.Remove(longestWord.Length/2,1).Insert(longestWord.Length / 2,"*");
+                Console.WriteLine(str);
+            }
+        }
+        //вывод листа строк
+        static void ShowList(List<string> list)
+        {
+            Console.WriteLine("Предложения:");
+            foreach(string s in list)
+            {
+                Console.WriteLine(s);
+            }
+        }
+        //вывод листа уникальных слов
+        static void ShowListOfUniqueWords(List<string> list)
+        {
+            Console.WriteLine("Уникальные слова:");
+            for(int i=0;i<list.Count;i++)
+            {
+                Console.Write(list[i]);
+                if(i<list.Count-1)Console.Write(',');
+            }
+            Console.Write('\n');
         }
     }
 }
