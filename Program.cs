@@ -9,10 +9,10 @@ namespace Lab4
     {
         static void Main(string[] args)
         {
-            //Console.OutputEncoding = Encoding.UTF8
+            Console.WriteLine("Введите текст:");
             string text = null;
-            //text = ReadText();
-            text = ReadTextFromFile();
+            text = ReadText();
+            //text = ReadTextFromFile();
 
             List<string> listOfSentences =new List<string>(GetListOfSentences(text));
             List<string> listOfUniqueWords = new List<string>(GetListOfUniqueWords(text));
